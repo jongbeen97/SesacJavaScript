@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /* 객체 리터럴 표기법 ( 중괄호 {} 활용하여 객체 표기 방법) */
+    {
+      const person = {
+        name :"홍길동",
+        age : '30' , // 후행쉼표
+      }
+    }
+    /*속성 프로퍼티 */
+    {
+      const car = {
+        model : 'genesis',
+        price : 5000,
+        'car-maker' : 'HD',
+        year: 2026,
+        owner: {
+          name: '이종빈',
+        }
+      }
+
+    //프로퍼티 벨류 가져오기 
+    //1. dot (.) : 일반적인 상황
+    console.log(car.model);
+    console.log(car.price);
+
+    // 2. bracket([]) : 특수한 상황 (key에 공백이나 하이픈이 포함)
+    console.log(car['model']);
+    console.log(car['price']);
+    console.log(car['car-maker']);
+    const key = 'year';
+    console.log(car[key])
+
+        // 3. optional chaning (?.)
+    // 평가 대상이 없으면 ? 
+    console.log(car.owner.name);
+    console.log(car?.member?.name); // 특정 참조 대상이 없을 경우 어찌 할 것인가? 
+    // 평가 대상이 없으면 원래는 오류가 발생하지만, 오류 대신 undefined 를 반환
+
+    /*속성 프로퍼티 다루기 */
+
+    const book = {} // 빈 객체 
+    book.title = '홍길동전'; // title property 가 새로 생성이 되는 것 
+    book.title = '종빈이전'; // title property 값을 변경 
+
+    console.log(book);
+    }
+
+    /*property shorthand*/
+    {
+      const zipCode = '12345';
+      const street = "강남대로";
+      // key value 같은 경우 한번만 작성
+      const address = {
+        zipCode,// zipCode : zipCode,
+        street// street: street, 이런 경우 값을 생략을 한다 
+      }
+      console.log(address);
+    }
+    
+    /*객체 구조 분해 할당 (Object Destructuring Assignment)*/
+    {
+      const qna = {
+        q: '한국의 수도는?',
+        a: 'SEOUL',
+      }
+
+      // 원래는 ...
+      // 프로퍼티 분해하고 꺼내 쓰는 것
+      const question = qna.q;
+      const answer = qna.a;
+
+      // 구조 분해 할당을 사용한다면 
+      const { q , a } = qna;
+      console.log(q,a);
+
+      const{q: quest , a: ans} = qna;
+      console.log(quest,ans);
+
+      // 간단한 연습(객체를 함수로 전달할 때)
+      function fnPrintUser({id,pw}){
+        console.log(id,pw)
+      }
+      const user = {
+        id: 'admin',
+        pw: '1234',
+      }
+      fnPrintUser(user);
+
+      /*나머지 속성(Property)*/
+      // 말 줄임표 (...) 사용하기 
+      const computer = {
+        cpu: 'm4',
+        ram: '32gb',
+        ssd: '1tb',
+      }
+
+      // 구조 분해 할당 시 나머지 속성 사용(rest: 나머지)
+      const { cpu, ...rest } = computer;
+      // cpu(컴퓨터가 가져감) 제외하고는 rest가 가져간다. 
+      console.log(cpu); //`m4`
+      console.log(rest); // {ram : `32g` , ssd: `1tb`}
+
+    }
+
+    /* 전개 구문(Spread syntax , 전개문법)*/
+    {
+      const phone = {
+        model: 'iphone17',
+        size: '6.8 inch'
+      }
+      const smartPhone = {
+        ...phone, // 폰 객체의 property (속성)를 펼치라는 것
+        size: '6inch' // 이는 수정하는 것이다. (또쓰는 것이니)
+      }
+      console.log(smartPhone);
+    }
+
+    
+    /*this */
+    // 어떤 함수를 호출하는 주체 
+    {
+      // 일반 함수의 this 바인딩 
+      function print(){
+        console.log('print 호출',this);
+      }
+      print(); // 이거는 누가 호출을 하는가? 이는 전역 객체라는 것이 호출을 한다 
+
+      // 메서드 ( 객체가 가지는 함수) 의 this 바인딩
+      const car = {
+        model: 'Ray',
+        drive: function (){
+          console.log('drive:',this);
+          console.log(this.model,"타고  드라이브"); // Ray
+        }
+      }
+      car.drive(); // 호출하는 건 car객체
+    }
+
+    /* 객체 생성자 함수 */
+    {
+      // 생성자 함수는 PascalCase를 권장합니다. (첫글자 대문자)
+      function Office(location){
+        // this 바인딩 : 어디로 this 가 연결이 되는가? 생성자 함수로 생성하는 객체에 연결이 됩니다. 
+        this.location = location;
+      }
+      // 객체 생성 : new 로 객체를 생성합니다
+      const office1 = new Office('101호');
+      const office2 = new Office('201호');
+
+      console.log(office1);
+      console.log(office2 instanceof Office); // true
+    }
+
+    /*
+    ============프로토 타입================
+    모든 객체가 가지는 부모 타임의 객체를 의미 
+    프로토 타입에는 공유 데이터를 넣고 사용함
+    */
+    {
+      const member = {
+        name : "Lee",
+        age : 30,
+      }
+      console.log(member);
+      console.log(member.toString());
+
+      /*프로토 타입이 필요한 경우*/
+      function Coffee(store){
+        this.store = store;
+        
+        
+        /*여기에 이제 함수를 집어 넣는 것 : 메서드를 집어 넣는 것*/
+        /*this.info = function (){//이 구성은 객체마다동일한 메서드를 가지므로 , "메모리 낭비"를 하는 것이다.
+          console.log(`${this.store}에서 파는 커피`);
+        }*/
+      
+      
+      }
+
+      /*COFFEE생성자 함수의 메서드를 프로토 타입의 등록하기(공유영역에 등록)*/
+      Coffee.prototype.info = function () {
+        console.log(`${this.store}에서 파는 커피`);
+      }
+      // 하나만 공유 영역에 두고 객체들이 참조해서 쓰는 것이다 
+      // 메모리 낭비 줄이고 효율적 
+
+
+      const coffee1 = new Coffee('Mega');
+      const coffee2 = new Coffee('compose');
+      coffee1.info();
+      coffee2.info();
+      console.log(coffee1);
+    }
+
+
+  </script>
+  
+</body>
+</html>

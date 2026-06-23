@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*1. 함수 선언식 (반환타입은 작성이 없다) 호이스팅 됨.*/
+    fnDeclare(); // 호이스팅이 되므로 미리 호출이 가능하다
+
+    function fnDeclare(){
+      console.log('함수 선언식');
+    }
+
+    /*2. 함수 표현식 함수를 변수에 할당하는 방법 , 호이스팅 안됨*/
+
+    const fnExpr = function () { // 주로 이름 없는 `익명 함수` 를 사용한다
+      console.log("함수 표현식");
+
+    }
+      fnExpr();
+
+      /* 3. 화살표 함수 ( 익명 함수의 간결한 버전 , 호이스팅 안됨) () -> {} */
+      const fnArrow = () => {
+        console.log('화살표 함수')
+      }
+      fnArrow();
+
+      /*4. 콜백 함수(다른 함수로 어떤 함수를 전달하기 (함수에게 함수를 전달))*/
+      function login(arg1,arg2) {
+        arg1();
+        arg2();
+      }
+
+      function idCheck() {
+        console.log('아이디 체크');
+      }
+
+      // 두번째 function
+      function pwCheck() {
+        console.log('비밀번호 체크');
+      }
+
+      login(idCheck,pwCheck); // 함수전달 , 함수 이름을 인자로 사용한다. 
+
+      /*익명함수 만들어 전달*/
+      login(function () {
+        console.log('id reCheck');
+      },function () {
+        console.log('pw reCheck');
+      }); // 함수 전달 ( 익명함수 자제 전달 )
+
+      /*화살표 함수 활용*/
+      login(() =>{
+        console.log('rerecheck');
+      },() =>{
+        console.log('pwrerecheck');
+      })
+
+
+  </script>
+</body>
+</html>

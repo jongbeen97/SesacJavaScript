@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    /*일치연산 불일치 연산*/
+    // {
+    //   console.log(10 === '10'); //false
+    //   console.log(10 !== '10'); //true
+    // }
+    /*falsy : false 로 취급하는 값(값이 없는 경우)*/
+    // {
+    //   console.log(0 == false);
+    //   console.log(undefined == false);
+    //   console.log('' == false);
+    // }
+
+    /*논리연산(&&,||) ,Short Circuit*/
+    // {
+    //   let a = '122222';
+    //   console.log(a || 'hello'); // a에 값이 있다면 값을 사용, 없다면 hello 사용
+    // }
+    /*널 병합*/
+    {
+      let a = 10;
+      let b = null;
+      console.log(typeof a, typeof b);
+      console.log(a ?? "hello"); // a 가 nullish 하면 hello 사용
+      console.log(b ?? "world"); // b 가 nullish 하면 world 사용
+
+    }
+
+  </script>
+  
+</body>
+</html>
