@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        /*카트 아이템 */
+        class CartItem {
+            // private field 만들기 
+            #quantity; // 수량
+            #price; // 가격
+
+            // 생성자 생성 
+            constructor(name,price,quantity = 1){
+                this.name = name; // 일반 프로퍼티 (공개된 일반의 필드,프로퍼티)
+                this.quantity = quantity; //setter 이용해서 전달 
+                //this.#price = price;   private 프로퍼티에 전달( 잘못된 값에 대비가 안됨 )
+                this.price = price; // setter 이용해서 전달 
+            }
+
+            // Getter
+            get quantity() {
+                return this.#quantity;
+            }
+
+            get price() {
+                return this.#price;
+            }
+
+
+            // Setter 
+            set quantity(value) {
+                if(! Number.isInteger(value) || value < 1){
+                console.error('수량은 최소 1개 이상인 정수여야 합니다')
+                return;
+                }
+                this.#quantity = value;
+            }
+
+            set price(value) {
+                if(value < 0){
+                    console.error('가격은 0보다 작을 수 없습니다.')
+                    return;
+                }
+                this.#price = value;
+            }
+
+            // 총 가격 반환
+            getTotalPrice() {
+                return this.#price * this.#quantity; // 수량이랑 가격 곱한 값 반환 
+            } 
+
+            // 정보 출력 메서드 
+            getSummary() {
+                return `${this.name} | 단가 : ${this.#price} | 수량 : ${this.#quantity} | 총가격 : ${this.getTotalPrice()}`
+            }
+
+            // 수량 추가 메서드 (amount : 총량) 
+            addQuantity(amount) {
+                if(amount<0){
+                    console.error('수량은 0이상이어야 합니다.')
+                    return;
+                }
+                this.quantity += amount; // 여기도 setter 호출이 된다
+            }
+            
+        }
+
+        /*인스턴스 생성 (생성자 호출)*/
+        const item = new CartItem('TV',500000);
+        console.log(item);
+
+        item.addQuantity(1); // TV 1대 추가
+        console.log(item);
+
+        item.price = -100000; // Error Message 
+        item.quantity = 1.5;// Error Message 
+        console.log(item.getSummary());
+
+        /*할인 카트 아이템 - 상속*/
+        class DiscountCartItem extends CartItem {
+            // private property
+            #discountRate; // 할인율
+
+            // 생성자 구현
+            constructor(name,price,quantity = 1,discountRate = 0){
+                super(name,price,quantity); // 상속 받는 생성자는 항상 Super() 먼저 호출을 한다
+                this.discountRate = discountRate; //Setter을 이용해 값 전달
+            }
+
+            // Getter
+            get discountRate() {
+                return this.#discountRate;
+            }
+
+            // setter
+            set discountRate(value) {
+                if(value < 0 || value > 100){
+                    console.error('할인율은 0과 100사이 입니다.')
+                    return;
+                }
+                this.#discountRate = value;
+            }
+
+            // 메서드 오버라이드 : getTotalPrice() , getSummary(할인율 정보 추가)
+            getTotalPrice(){
+              return (super.price * super.quantity) - (super.price * super.quantity) * (this.#discountRate/100);   
+            }
+
+            getdiscountSummary(){
+                return `${super.getSummary()} | 할인율 : ${this.#discountRate}%`;
+            }
+
+        }
+
+            /* DiscountCartItem 인스턴스 생성 */
+            const discountItem = new DiscountCartItem('노트북', 1500000, 1, 50); // 이름, 가격, 수량, 할인율
+            const specialItem = new DiscountCartItem('소시지',10000,1,10);
+            console.log(specialItem);
+            console.log(specialItem.getdiscountSummary());
+        
+            
+
+    </script>
+</body>
+</html>
