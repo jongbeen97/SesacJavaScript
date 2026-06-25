@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- 인라인 이벤트 -->
+    <button onclick="alert('Hello World')">홍명보</button>
+    <button onclick="showMessage()">계란투척</button>
+    <script>
+        function showMessage() {
+            alert('인라인 방식입니다.');
+        }
+    </script>
+
+    <hr>
+
+    <!-- 고전 이벤트 -->
+     <button id="myBtn" data-user-role="korean">쌰갈명보</button>
+     <script>
+        const btn = document.querySelector('#myBtn');
+
+        // 첫 번째 핸들러 등록
+        btn.onclick = function() {
+        console.log('첫 번째 작업');
+        };
+
+        // 두 번째 핸들러 등록 (첫 번째 핸들러가 제거됨)
+        btn.onclick = function() {
+        console.log('두 번째 작업만 실행됩니다.');
+        };
+
+        function fnEvent1(){
+            console.log("첫번째 작업")
+        }
+        function fnEvent2(){
+            console.log("두번째 작업")
+        }
+        btn.onclick = function(e){
+            fnEvent1();
+            fnEvent2();
+        }
+        
+        // 이벤트 객체 사용 onclick -> 이벤트 핸들러에 첫 매개변수로 선언하고 사용
+        btn.onclick = (e) => {
+            console.log('type:', e.type);
+            console.log('target:', e.target);
+            console.log('currentTarget:', e.currentTarget);
+            console.log('this:',this);
+            console.log('data-user-role:', e.target.dataset.userRole);
+        }
+
+     </script>
+
+     <!-- 인라인 방식의 객체 : 반드시 이벤트라는 이름으로 넘겨줘야 함-->
+      <button onclick="fnInline(event)">홍명보 나가 ...</button>
+       <script>
+        function fnInline(e){
+            console.log('target:', e.target);
+            console.log('currentTarget:', e.currentTarget);
+            console.log('this:',this);
+        }
+       </script>
+
+     <hr>
+     <!-- 표준 이벤트 -->
+     <button id="ourBtn">제발 꺼져줘</button>
+     <script>
+        const ourBtn = document.querySelector('#ourBtn');
+
+        const logHello = () => console.log('Hello');
+        const logWorld = () => console.log('World');
+
+        // 여러 개의 리스너 등록 가능 (둘 다 실행됨)
+        ourBtn.addEventListener('click', logHello);
+        ourBtn.addEventListener('click', logWorld);
+
+        // 특정 리스너만 제거 가능
+        ourBtn.removeEventListener('click', logHello);
+        ourBtn.removeEventListener('click', logWorld);
+
+        // 이벤트 객체 
+        ourBtn.addEventListener('click', function(e){
+            console.log('target:', e.target);
+            console.log('currentTarget:', e.currentTarget);
+            console.log('this:',this);
+        })
+     </script>
+
+     <hr>
+
+     <!-- (tr>td*3)*3 면 3줄 3칸짜리가 됨-->
+     <!-- 이벤트 버블링과 이벤트 위임-->
+      <style>
+        #my-table{
+            padding : 20px;
+            border-collapse: collapse;
+        }
+        #my-table td{
+            padding : 20px;
+            border : 1px solid black;
+        }
+      </style>
+     <table id="my-table">
+        <tbody>
+            <tr>
+                <td>과일이름</td>
+                <td>과일가격</td>
+                <td>과일 단위 갯수</td>
+            </tr>
+            <tr>
+                <td>사과</td>
+                <td>25,000원</td>
+                <td>20개/Box</td>
+            </tr>
+            <tr>
+                <td>배</td>
+                <td>33,000원</td>
+                <td>20개/box</td>
+            </tr>
+            
+        </tbody>    
+    </table>
+
+    <script>
+        // 부모 요소인 my-table 취득 
+        const myTable = document.getElementById('my-table');
+
+        // 부모 요소에 클릭 이벤트 하나만 등록 (자식 요소의 클릭 이벤트를 위임 받는 이벤트)
+        myTable.addEventListener('click', function(e){
+            
+            // 이벤트 위임 핵심 : 실제로 클릭한 가장 안쪽 요소(사용자가 클릭한 요소)
+            const clickedElement = e.target;
+
+            // td 클릭 확인하기 
+            if (clickedElement.tagName !== 'TD'){
+                return;
+            }
+
+            // td 태그 내부 텍스트 (textContent) 가져오기
+            alert(`선택한 과일 : ${clickedElement.textContent}`);
+        });
+    </script>
+</body>
+</html>
