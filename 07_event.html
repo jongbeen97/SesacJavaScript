@@ -7,11 +7,11 @@
 </head>
 <body>
     <!-- 인라인 이벤트 -->
-    <button onclick="alert('Hello World')">홍명보</button>
+    <button onclick="alert('잘가라 홍명보')">홍명보</button>
     <button onclick="showMessage()">계란투척</button>
     <script>
         function showMessage() {
-            alert('인라인 방식입니다.');
+            alert('당신은 경질입니다');
         }
     </script>
 
@@ -143,5 +143,92 @@
             alert(`선택한 과일 : ${clickedElement.textContent}`);
         });
     </script>
+
+<!-- 이벤트 위임 -->
+    <ul id="menuContainer" style="list-style: none; padding: 0;">
+  <li>
+    <button class="menu-item" data-menu="home">
+      <i class="icon">🏠</i>
+      <span>홈으로 가기</span>
+    </button>
+  </li>
+  <li>
+    <button class="menu-item" data-menu="profile">
+      <i class="icon">👤</i>
+      <span>프로필 설정</span>
+    </button>
+  </li>
+  <li>
+    <button class="menu-item" data-menu="settings">
+      <i class="icon">⚙️</i>
+      <span>시스템 환경</span>
+    </button>
+  </li>
+</ul>
+<script>
+  const menuContainer = document.getElementById('menuContainer');
+
+  // [핵심1] 부모 요소에 이벤트 리스너 등록
+  menuContainer.addEventListener('click', (e) => {
+    
+    // [핵심2] e.target에서부터 가장 가까운 .menu-item 조상을 찾습니다.
+    // (e.target: 클릭한 가장 안쪽 요소)
+    // 클릭된 게 <i>이든, <span>이든 최종적으로 <button>을 찾아냅니다.
+    const btn = e.target.closest('.menu-item');
+
+    // Early Return
+    if (!btn) return;
+    if (!menuContainer.contains(btn)) return;
+
+    // Business Login
+    const menuName = btn.dataset.menu;
+    console.log(`선택된 메뉴: ${menuName}`);
+  });
+</script>
+
+<!-- 이벤트 전파 방지 -->
+
+<div id="overlay" style="border: 1px solid gray; padding: 50px;">
+  <div id="content" style="background-color: silver;">
+    <h2>모달 창 제목</h2>
+    <p>모달 내부를 클릭해도 모달은 닫히지 않습니다.</p>
+  </div>
+</div>
+
+<script>
+  const overlay = document.getElementById('overlay');
+  const content = document.getElementById('content');
+  
+  // 배경을 클릭하면 모달을 닫음
+  overlay.addEventListener('click', () => {
+    console.log('배경이 클릭되어 모달을 닫습니다.');
+    overlay.style.display = 'none';
+  });
+
+  // 모달 내부 콘텐츠를 클릭했을 때
+  content.addEventListener('click', (e) => {
+    e.stopPropagation();  // 이벤트 버블링 중단
+    console.log('부모(overlay)의 클릭 이벤트가 실행되지 않게 합니다.');
+  });
+</script>
+
+<hr>
+
+<!-- 기본 이벤트 취소 -->
+ <!-- action="http://localhost:8080/users" 제출을 누르면 여기 링크로 저장이 왼다는 것이다  -->
+ <form id="user-form"> 
+    <input type="text" id="username" name="username">
+    <button type="submit">제출</button>
+ </form>
+ <script>
+    const userForm = document.getElementById('user-form');
+    // 제출 버튼을 클릭 하는 것이고 form 은 제출을 하는 것. 
+    // user-form의 이벤트는 
+    userForm.addEventListener('submit', function(e) {
+        console.log('제출 완료');
+        e.preventDefault(); // 기본 이벤트 취소 
+    })
+</script>
+
 </body>
 </html>
