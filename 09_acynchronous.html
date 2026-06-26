@@ -103,32 +103,24 @@
         })
     </script>
     <!-- Fetch API : fetch() 함수 -->
-     <div>
+     <!-- <div>
         <select id="sel">
             <option value="cat">도라에몽</option>
             <option value="dog">댕댕이</option>
         </select>
         <button id="btn2">요청</button>
         <div id="result-image"></div>
-     </div>
+     </div> -->
      <script>
         document.getElementById('btn2').addEventListener('click', e =>{
             const myPromise = fetch(`https://api.the${document.getElementById('sel').value}api.com/v1/images/search`);
-            console.log(myPromise);
-
             myPromise
-                .then(response => {
+                .then(response => response.json())
                     //console.log(response.json());
-                    if(!response.ok){
-                        throw new Error(`에러 발생(상태코드 : ${response.status})`);
-                    }
-                    return response.json();
-                })
                 .then(json =>{
                     console.log(json);
                 })
         })
-        .catch(error => console.error(error.message));
      </script>
 </body>
 </html>
