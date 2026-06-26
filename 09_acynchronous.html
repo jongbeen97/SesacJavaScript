@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!-- XML HttpRequest 객체 -->
+     <form id="agify-form">
+        <label for="name">이름</label>
+        <input type="text" id="name">
+        <button type="submit">제출</button>
+     </form>
+     <div id="agify-result">
+        여기에 결과가 노출됩니다.
+     </div>
+     <script>
+        const agifyForm = document.getElementById('agify-form');
+        agifyForm.addEventListener('submit', e => {
+            e.preventDefault();// form 제출은 동기 처리 방식, 비동기 요청시 항상 취소를 해야 한다. 
+            /*지금부터 비동기 처리 방식 시작*/
+            const xhr = new XMLHttpRequest(); // 객체 생성부터 진행하기
+            /*요청 코드 넣기*/
+            //1. 오픈 요청
+            xhr.open('get',`https://api.agify.io/?name=${document.getElementById('name').value}`); // api로 연결 하는 것, 
+            // get 요청 메서드 방식을 이용해서 주소창을 이용한 요청 방식, 주소창에 데이터 실어서 보내는 방식
+            // 주소를 묶는 문자열 백틱 처리하고 value값을 가져오도록 하는 방식을 이용하면 됨.
+            
+            //2. 요청 변화 감지 
+            xhr.addEventListener('readystatechange', () => {
+                if(xhr.readyState === 4){
+                    // 상태 코드
+                    if(xhr.status === 200){
+                        const result = xhr.responseText // 응답 결과가 JSON인 경우 "JSON" 문자열로 받아온다. (스트링으로 받아옴)
+                        // 내장 객체 만들기 
+                        JSON.parse(result) // JSON 문자열을 JavaScript 객체로 변환하는 것이다.
+                        const obj = JSON.parse(result); // JSON 문자열 -> JS 객체로 변환
+                        document.getElementById('agify-result').textContent = `count=${obj.count}, name=${obj.name}, age=${obj.age}`;
+                    }
+                }
+            })
+            // 마지막 요청 
+            xhr.send(); // 요청 보내기
+                
+        })
+     </script>
+
+     <!-- Promise 객체 
+      1. 왜 Promsie 객체가 필요한지 설명하겟다-->
+    <button id="btn">요청</button>
+    <script>
+        document.getElementById('btn').addEventListener('click', () => {
+            let result; // undefiend 상태 
+            const xhr = new XMLHttpRequest();
+            xhr.open('get', 'https://jsonplaceholder.typicode.com/todos/1');
+            xhr.addEventListener('readystatechange', () => {
+                if(xhr.readyState === 4){
+                    if(xhr.status === 200){
+                        const{ title } = JSON.parse(xhr.responseText); // 객체 구조분해 할당
+                        result = title;           
+                    }
+            }
+        })
+        xhr.send();
+        console.log(result); // 비동기 결과를 기다리지 않기 때문에 undefined 그대로 출력
+        })
+
+    </script>
+</body>
+</html>
